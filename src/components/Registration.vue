@@ -10,9 +10,7 @@
 </template>
 
 <script>
-
 import axios from "axios";
-
 export default {
     name: "RegistrationComponent",
     data() {
@@ -26,12 +24,12 @@ export default {
        registrationInDatabase(){
            if(this.username !== "" && this.password !== "" && this.passwordRepeat !== ""){
                if(this.passwordRepeat === this.password){
-                   const data = {
+                   const body = {
                        username: this.username,
                        password: this.password
                    }
 
-                   axios.post('http://localhost:8081/user', data)
+                   axios.post('http://localhost:8081/user', body)
                        .then(response => {
                        if(response.status === 201){
                            this.username = "";

@@ -2,7 +2,7 @@
     <v-app>
         <v-main>
             <NavBar :login="login"></NavBar>
-            <router-view/>
+            <router-view @successLogin="changeLogin"/>
         </v-main>
     </v-app>
 </template>
@@ -17,6 +17,11 @@ export default defineComponent({
     data(){
         return {
             login: false,
+        }
+    },
+    methods: {
+        changeLogin(){
+            this.login = !this.login;
         }
     }
 })
