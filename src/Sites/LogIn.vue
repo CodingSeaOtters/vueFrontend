@@ -13,6 +13,7 @@ import axios from "axios";
 
 export default {
     name: "LogIn",
+    props:["connectionBase"],
     data() {
         return {
             username: "",
@@ -28,7 +29,7 @@ export default {
                     password: this.password
                 }
 
-                axios.post('http://localhost:8081/auth/login', body)
+                axios.post(this.connectionBase + '/auth/login', body)
                     .then(response => {
                         if (response.status === 202) {
                             localStorage.setItem("JWT", response.data);
@@ -42,10 +43,9 @@ export default {
                     .catch(e => console.log(e))
             }
         },
-
         getUser() {
             return new Promise((resolve, reject) => {
-                axios.get('http://localhost:8081/user/find/' + this.username, {
+                axios.get( this.connectionBase + '/user/find/' + this.username, {
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.getItem("JWT")
                     }
@@ -60,10 +60,5 @@ export default {
             })
         }
     }
-
 }
 </script>
-
-<style scoped>
-
-</style>

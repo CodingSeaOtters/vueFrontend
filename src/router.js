@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LogIn from "@/components/LogIn.vue";
-import Registration from "@/components/Registration.vue";
-import BoardsView from "@/components/BoardsView.vue";
+import LogIn from "@/Sites/LogIn.vue";
+import Registration from "@/Sites/Registration.vue";
+import BoardsView from "@/Sites/BoardsView.vue";
+import showNotes from "@/Sites/ShowNotes.vue";
 
 const routes = [
     {
@@ -15,7 +16,11 @@ const routes = [
     {
         path:"/boards/:id",
         component: BoardsView
-    }
+    },
+    {
+        path: "/notes/:id",
+        component: showNotes
+    },
 ];
 
 const router = createRouter({

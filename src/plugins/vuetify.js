@@ -1,5 +1,5 @@
 import { createVuetify } from 'vuetify'
-import {VApp, VBtn, VCard, VCardActions, VMain, VTextField} from "vuetify/components";
+import {VApp, VBtn, VCard, VCardActions, VDialog, VMain, VTextField} from "vuetify/components";
 
 export default createVuetify({
     components:{
@@ -8,6 +8,7 @@ export default createVuetify({
         VCard,
         VTextField,
         VBtn,
-        VCardActions
+        VCardActions,
+        VDialog,
     }
 })

@@ -13,11 +13,12 @@
 import axios from "axios";
 export default {
     name: "RegistrationComponent",
+    props :["connectionBase"],
     data() {
         return {
             username : "",
             password : "",
-            passwordRepeat: ""
+            passwordRepeat: "",
         }
     },
     methods: {
@@ -28,8 +29,7 @@ export default {
                        username: this.username,
                        password: this.password
                    }
-
-                   axios.post('http://localhost:8081/user', body)
+                   axios.post(this.connectionBase + '/user', body)
                        .then(response => {
                        if(response.status === 201){
                            this.username = "";

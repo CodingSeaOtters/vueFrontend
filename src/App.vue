@@ -1,8 +1,8 @@
 <template>
     <v-app>
         <v-main>
-            <NavBar :login="login"></NavBar>
-            <router-view @successLogin="changeLogin"/>
+            <NavBar @logout="changeLogin" :login="login"></NavBar>
+            <router-view :connectionBase="connectionBase" @successLogin="setLogin"/>
         </v-main>
     </v-app>
 </template>
@@ -17,9 +17,14 @@ export default defineComponent({
     data(){
         return {
             login: false,
+            connectionBase: "http://localhost:8081"
         }
     },
     methods: {
+        setLogin(){
+            document.cookie = "login=true; expires=" + new Date(Date.now() + 29 * 60 * 1000).toUTCString() + "; path=/";
+            this.changeLogin()
+        },
         changeLogin(){
             this.login = !this.login;
         }
@@ -28,6 +33,3 @@ export default defineComponent({
 
 </script>
 
-<style>
-
-</style>
