@@ -10,18 +10,22 @@
             </router-link>
         </div>
         <div class="d-flex justify-space-between" v-else>
-            <h1>Willkommen</h1>
+            <h1>Willkommen, {{username}}!</h1>
             <v-btn @click="logout" color="warning" variant="elevated">LogOut</v-btn>
         </div>
     </div>
 </template>
 
 <script>
+import {mapState} from "vuex";
 
 export default {
     name: "NavBar",
-    props: ["login"],
     computed: {
+      ...mapState({
+        username: "username",
+        login: "loggedIn",
+      }),
         containsRegistration() {
             return this.$route.path.includes("registration")
         },
