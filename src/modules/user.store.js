@@ -1,24 +1,136 @@
 import {createStore} from "vuex";
+import axios from "axios";
+import {connectionBase} from "@/ConnectionBase";
+import router from "@/router";
 
-export default createStore({
+const store = createStore({
     state: {
         username: "",
+        userId: 0,
         loggedIn: false,
         JWT: "",
-        boardIds: [],
-
+        currentBoardId: 0,
+        boards: [],
+        notesOfBoard: [],
     },
     mutations: {
-        changeLoggedIn : state => !state.loggedIn,
+        changeLoggedIn: state => state.loggedIn = !state.loggedIn,
+        setJwt: (state, payload) => state.JWT = payload,
+        setUsername: (state, payload) => state.username = payload,
+        setBoards: (state, payload) => state.boards = payload,
+        setUserId: (state, payload) => state.userId = payload,
+        setNotesOfBoard: (state, payload) => state.notesOfBoard = payload,
+        setCurrentBoardId: (state, payload) => state.currentBoardId = payload,
     },
     actions: {
-        addBoardIds(context, payload){
-            context.commit('UPDATE_BOARDIDS', payload)
+        logIn(context, body) {
+            axios.post(connectionBase + '/auth/login', body)
+                .then(response => {
+                    if (response.status === 202) {
+                        context.commit("setJwt", response.data);
+                        context.commit("setUsername", body.username);
+                        context.dispatch("getUserData", body.username)
+                            .then(() => {
+                                context.commit("changeLoggedIn");
+                                router.push("/boards")
+                            });
+                    }
+                });
+        },
+        getUserData(context, username) {
+            return new Promise((resolve, reject) => {
+                axios.get(connectionBase + "/user/find/" + username, {
+                    headers: {
+                        'Authorization': 'Bearer ' + context.state.JWT
+                    }
+                }).then(response => {
+                    if (response.status === 200) {
+                        context.commit("setUserId", response.data.id);
+                        context.dispatch("getUserBoards", response.data.id)
+                            .then(() => resolve());
+                    }
+                }).catch(error => reject(error))
+            })
+        },
+        getUserBoards(context, userId) {
+            return new Promise((resolve, reject) => {
+                axios.get(connectionBase + "/board/all/" + userId, {
+                    headers: {
+                        'Authorization': 'Bearer ' + context.state.JWT
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            context.commit("setBoards", response.data);
+                            resolve();
+                        }
+                    })
+                    .catch(error => reject(error));
+            })
+        },
+        changeLoggedIn(context) {
+            context.commit("changeLoggedIn");
+        },
+        showBoard(context, boardId) {
+            context.dispatch("getAllNotes", boardId)
+                .then(() => {
+                    context.commit("setCurrentBoardId", boardId)
+                    router.push("/notes")
+                })
+        },
+        getAllNotes(context, boardId)  {
+            return new Promise((resolve, reject) => {
+                axios.get(connectionBase + "/note/all/" + boardId, {
+                    headers: {
+                        'Authorization': 'Bearer ' + context.state.JWT
+                    }
+                }).then(response => {
+                    if (response.status === 200) {
+                        context.commit("setNotesOfBoard", response.data);
+                        resolve();
+                    }
+                }).catch(error => reject(error))
+            })
+        },
+        createBoard(context, body) {
+            axios.post(connectionBase + '/board/' + context.state.userId, body, {
+                headers: {
+                    'Authorization': 'Bearer ' + context.state.JWT,
+                }
+            })
+                .then(() => context.dispatch("getUserBoards", context.state.userId))
+                .catch(error => console.log(error))
+        },
+        createNote(context, body){
+            axios.post(connectionBase + "/note/" + context.state.currentBoardId, body, {
+                headers: {
+                    'Authorization': 'Bearer ' + context.state.JWT
+                }
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        context.dispatch("getAllNotes", context.state.currentBoardId);
+                    }
+                })
         }
     },
     getters: {
-        getUsername : state => state.username,
-        isLogged: state => state.loggedIn,
-        getJWT: state => state.JWT,
+        getUsername(state){
+            return state.username;
+        },
+        getBoards(state){
+            return state.boards;
+        },
+        getUserId(state){
+            return state.userId;
+        },
+        isLogged(state){
+            return state.loggedIn;
+        },
+        getJWT(state){
+            return state.JWT;
+        }
     }
 })
+
+export default store;

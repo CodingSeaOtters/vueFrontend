@@ -9,16 +9,14 @@
 </template>
 
 <script>
-import axios from "axios";
+import store from "@/modules/user.store";
 
 export default {
     name: "LogIn",
-    props:["connectionBase"],
     data() {
         return {
             username: "",
             password: "",
-            userId: 0,
         }
     },
     methods: {
@@ -28,37 +26,9 @@ export default {
                     username: this.username,
                     password: this.password
                 }
-
-                axios.post(this.connectionBase + '/auth/login', body)
-                    .then(response => {
-                        if (response.status === 202) {
-                            localStorage.setItem("JWT", response.data);
-                            this.getUser()
-                                .then(() => {
-                                    this.$emit("successLogin")
-                                    this.$router.push("/boards/" + this.userId)
-                                });
-                        }
-                    })
-                    .catch(e => console.log(e))
+                store.dispatch("logIn", body)
             }
         },
-        getUser() {
-            return new Promise((resolve, reject) => {
-                axios.get( this.connectionBase + '/user/find/' + this.username, {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem("JWT")
-                    }
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            this.userId = response.data.id;
-                            resolve();
-                        }
-                    })
-                    .catch(error => reject(error))
-            })
-        }
     }
 }
 </script>

@@ -1,48 +1,19 @@
 <template>
-  <v-card @click="showBoard" class="pa-3 my-2 bg-blue-grey-darken-3">
-      {{name}}
-  </v-card>
+    <v-card @click="showBoard" class="pa-3 my-2 bg-blue-grey-darken-3">
+        {{ board.boardName }}
+    </v-card>
 </template>
 
 <script>
-import axios from "axios";
+import store from "@/modules/user.store";
 
 export default {
     name: "BoardComponent",
-    props:["id", "connectionBase"],
-    data(){
-        return{
-            name : ""
-        }
-
-    },
-    created() {
-        this.getBoardInfo();
-    },
+    props: ["board"],
     methods: {
-        getBoardInfo(){
-            axios.get(this.connectionBase + "/board/" + this.id, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem("JWT")
-                }
-            })
-                .then(response => {
-                    if (response.status === 200) {
-
-                        this.name = response.data.boardName;
-                        console.log(response.data)
-                    }
-                })
-                .catch(e => console.log(e))
-        },
-        showBoard(){
-            this.$router.push("/notes/" + this.id)
+        showBoard() {
+            store.dispatch("showBoard", this.board.boardId)
         }
     }
-
 }
 </script>
-
-<style scoped>
-
-</style>

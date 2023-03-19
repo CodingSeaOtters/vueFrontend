@@ -1,0 +1,1 @@
+export const connectionBase = "http://localhost:8081";

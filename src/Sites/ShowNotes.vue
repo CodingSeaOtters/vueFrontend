@@ -4,9 +4,9 @@
         <h1>Notes</h1>
         <v-btn @click="dialog = true" variant="elevated" color="warning"><b>+</b></v-btn>
     </div>
-    <div class="d-flex justify-space-evenly">
-        <div v-for="(noteId,index) in noteIds" :key="index">
-            <NoteComponent :connection-base="connectionBase" :id="noteId"/>
+    <div class="d-flex flex-wrap justify-space-evenly">
+        <div v-for="(note,index) in notes" :key="index">
+            <NoteComponent class="flex-item" :data="note"/>
         </div>
         <v-dialog v-model="dialog" width="auto">
             <v-card title="Neue Notiz erstellen" width="400" class="pa-5 ma-auto mt-16 bg-blue-grey-darken-2">
@@ -22,16 +22,21 @@
 </template>
 
 <script>
-import axios from "axios";
 import NoteComponent from "@/components/NoteComponent.vue";
+import {mapState} from "vuex";
+import store from "@/modules/user.store";
+
+
 export default {
     name: "ShowNotes",
     components: {NoteComponent},
-    props: ["connectionBase"],
+    computed: {
+        ...mapState({
+            notes: "notesOfBoard",
+        })
+    },
     data() {
         return {
-            noteIds: [],
-            boardId: this.$route.params.id,
             dialog: false,
             newNote: {
                 title: "",
@@ -42,27 +47,8 @@ export default {
             }
         }
     },
-    created() {
-        if (!document.cookie.split(';').some((item) => item.trim().startsWith('login='))) {
-            this.$router.push('/');
-        }
-        this.getAllNotes()
-    },
-    methods: {
-        getAllNotes() {
-            axios.get(this.connectionBase + "/board/note/" + this.boardId, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem("JWT")
-                }
-            })
-                .then(response => {
-                    if (response.status === 200) {
-                        this.noteIds = response.data;
-                    }
-                })
-                .catch(e => console.log(e))
 
-        },
+    methods: {
         createNote() {
             if (this.newNote.title !== "" && this.newNote.content !== "") {
                 const body = {
@@ -72,18 +58,9 @@ export default {
                     startDate: this.newNote.startDate,
                     endDate: this.newNote.endDate,
                 }
+                store.dispatch("createNote", body)
+                this.cancel();
 
-                axios.post(this.connectionBase + "/note/" + this.boardId, body, {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem("JWT")
-                    }
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            this.cancel();
-                            this.getAllNotes();
-                        }
-                    })
             }
         },
         cancel() {

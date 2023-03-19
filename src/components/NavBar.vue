@@ -6,11 +6,11 @@
                 <v-btn color="warning"><b>Registrieren</b></v-btn>
             </router-link>
             <router-link v-if="containsRegistration" to="/">
-                <v-btn color="warning" ><b>Login</b></v-btn>
+                <v-btn color="warning"><b>Login</b></v-btn>
             </router-link>
         </div>
         <div class="d-flex justify-space-between" v-else>
-            <h1>Willkommen, {{username}}!</h1>
+            <h1>Willkommen, {{ username }}!</h1>
             <v-btn @click="logout" color="warning" variant="elevated">LogOut</v-btn>
         </div>
     </div>
@@ -18,26 +18,28 @@
 
 <script>
 import {mapState} from "vuex";
+import router from "@/router";
 
 export default {
     name: "NavBar",
     computed: {
-      ...mapState({
-        username: "username",
-        login: "loggedIn",
-      }),
+        ...mapState({
+            username: "username",
+            login: "loggedIn",
+        }),
         containsRegistration() {
-            return this.$route.path.includes("registration")
+            return this.$route.path.includes("registration");
         },
     },
     methods: {
-        logout(){
-            document.cookie = "login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            localStorage.removeItem("JWT");
-            window.location.reload();
-             this.$router.push("/")
-            this.$emit("logout")
+        logout() {
+            this.store.dispatch("changeLoggedIn");
+            router.push("/");
+
         }
+    },
+    mounted() {
+        console.log(this.login)
     }
 }
 </script>

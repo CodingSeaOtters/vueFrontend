@@ -14,11 +14,11 @@ const routes = [
         component: Registration,
     },
     {
-        path:"/boards/:id",
+        path:"/boards",
         component: BoardsView
     },
     {
-        path: "/notes/:id",
+        path: "/notes",
         component: showNotes
     },
 ];
