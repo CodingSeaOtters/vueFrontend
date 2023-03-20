@@ -1,7 +1,7 @@
-// import Vuex from "vuex"
+// import {createStore} from "vuex"
 // import user from "../modules/user.store"
 //
-// export const store = new Vuex.Store({
+// export const store = createStore({
 //     modules: {
 //         user,
 //     }
