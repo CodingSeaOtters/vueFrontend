@@ -4,6 +4,7 @@ import {connectionBase} from "@/ConnectionBase";
 import router from "@/router";
 
 const store = createStore({
+    namespaced: true,
     state: {
         username: "",
         userId: 0,
