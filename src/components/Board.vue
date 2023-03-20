@@ -2,14 +2,14 @@
   <v-card @click="showBoard" class="d-flex justify-space-between pa-3 my-2 bg-blue-grey-darken-3">
     {{ board.boardName }}
 
-    <v-btn class="justiy-self-end" color="warning" variant="elevated">
-      <v-menu activator="parent">
-        <v-list>
-          <v-list-item>
-            <v-card @click="changeDialog">Bearbeiten</v-card>
+    <v-btn color="warning" variant="elevated">
+      <v-menu  activator="parent">
+        <v-list class="bg-blue-grey">
+          <v-list-item class="bg-blue-grey">
+            <v-card class="bg-blue-grey" @click="changeDialog">Bearbeiten</v-card>
           </v-list-item>
-          <v-list-item>
-            <v-card @click="deleteBoard">Löschen</v-card>
+          <v-list-item class="bg-blue-grey">
+            <v-card class="bg-blue-grey" @click="deleteBoard">Löschen</v-card>
           </v-list-item>
 
         </v-list>
@@ -55,7 +55,7 @@ export default {
           boardName: this.newName
         }
       }
-      store.dispatch("modifyNote", exchangeObject);
+      store.dispatch("modifyBoard", exchangeObject);
       this.cancel();
     },
     showBoard() {

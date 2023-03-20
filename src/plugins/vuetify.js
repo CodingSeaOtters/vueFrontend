@@ -3,7 +3,7 @@ import {
     VApp,
     VBtn,
     VCard,
-    VCardActions,
+    VCardActions, VCardText, VCardTitle,
     VDialog,
     VList,
     VListItem, VListItemTitle,
@@ -25,5 +25,7 @@ export default createVuetify({
         VList,
         VListItem,
         VListItemTitle,
+        VCardTitle,
+        VCardText,
     }
 })

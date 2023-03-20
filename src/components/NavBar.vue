@@ -9,7 +9,7 @@
                 <v-btn color="warning"><b>Login</b></v-btn>
             </router-link>
         </div>
-        <div class="d-flex justify-space-between" v-else>
+        <div class="d-flex align-center justify-space-between" v-else>
             <h1>Willkommen, {{ username }}!</h1>
             <v-btn @click="logout" color="warning" variant="elevated">LogOut</v-btn>
         </div>
@@ -38,8 +38,5 @@ export default {
 
         }
     },
-    mounted() {
-        console.log(this.login)
-    }
 }
 </script>

@@ -79,7 +79,7 @@ const store = createStore({
                     router.push("/notes")
                 })
         },
-        getAllNotes(context, boardId)  {
+        getAllNotes(context, boardId) {
             return new Promise((resolve, reject) => {
                 axios.get(connectionBase + "/note/all/" + boardId, {
                     headers: {
@@ -102,25 +102,26 @@ const store = createStore({
                 .then(() => context.dispatch("getUserBoards", context.state.userId))
                 .catch(error => console.log(error))
         },
-        modifyNote(context, exchangeObject){
-            axios.put(connectionBase + "/board/" + exchangeObject.boardId, exchangeObject.body,{
+        modifyBoard(context, exchangeObject) {
+            axios.put(connectionBase + "/board/" + exchangeObject.boardId, exchangeObject.body, {
                 headers: {
                     'Authorization': 'Bearer ' + context.state.JWT,
                 }
             }).then(() => {
                 context.dispatch("getUserBoards", context.state.userId)
+                    .catch(error => console.log(error))
             })
         },
-        deleteBoard(context, boardId){
-           axios.delete(connectionBase + "/board/" + boardId, {
-               headers: {
-                   'Authorization': 'Bearer ' + context.state.JWT,
-               }
-           })
-               .then(() => context.dispatch("getUserBoards", context.state.userId))
-               .catch(error => console.log(error))
+        deleteBoard(context, boardId) {
+            axios.delete(connectionBase + "/board/" + boardId, {
+                headers: {
+                    'Authorization': 'Bearer ' + context.state.JWT,
+                }
+            })
+                .then(() => context.dispatch("getUserBoards", context.state.userId))
+                .catch(error => console.log(error))
         },
-        createNote(context, body){
+        createNote(context, body) {
             axios.post(connectionBase + "/note/" + context.state.currentBoardId, body, {
                 headers: {
                     'Authorization': 'Bearer ' + context.state.JWT
@@ -132,22 +133,41 @@ const store = createStore({
                             .catch(error => console.log(error));
                     }
                 })
-        }
+        },
+        modifyNote(context, exchangeObject) {
+            axios.put(connectionBase + "/note/" + exchangeObject.id, exchangeObject.body, {
+                headers: {
+                    'Authorization': 'Bearer ' + context.state.JWT,
+                }
+            }).then(() => context.dispatch("getAllNotes", context.state.currentBoardId))
+                .catch(error => console.log(error))
+
+
+        },
+        deleteNote(context, noteId) {
+            axios.delete(connectionBase + "/note/" + noteId, {
+                headers: {
+                    'Authorization': 'Bearer ' + context.state.JWT,
+                }
+            })
+                .then(() => context.dispatch("getAllNotes", context.state.currentBoardId))
+                .catch(error => console.log(error))
+        },
     },
     getters: {
-        getUsername(state){
+        getUsername(state) {
             return state.username;
         },
-        getBoards(state){
+        getBoards(state) {
             return state.boards;
         },
-        getUserId(state){
+        getUserId(state) {
             return state.userId;
         },
-        isLogged(state){
+        isLogged(state) {
             return state.loggedIn;
         },
-        getJWT(state){
+        getJWT(state) {
             return state.JWT;
         }
     }

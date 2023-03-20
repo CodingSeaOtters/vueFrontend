@@ -6,7 +6,7 @@
     </div>
     <div class="d-flex flex-wrap justify-space-evenly">
         <div v-for="(note,index) in notes" :key="index">
-            <NoteComponent class="flex-item" :data="note"/>
+            <NoteComponent :data="note"/>
         </div>
         <v-dialog v-model="dialog" width="auto">
             <v-card title="Neue Notiz erstellen" width="400" class="pa-5 ma-auto mt-16 bg-blue-grey-darken-2">
@@ -55,8 +55,8 @@ export default {
                     title: this.newNote.title,
                     content: this.newNote.content,
                     title_image_path: this.newNote.title_image_path,
-                    startDate: this.newNote.startDate,
-                    endDate: this.newNote.endDate,
+                    startDate:"2023-01-12",
+                    endDate: "2023-01-12",
                 }
                 store.dispatch("createNote", body)
                 this.cancel();

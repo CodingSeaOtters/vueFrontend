@@ -38,9 +38,6 @@ export default {
       newBoard: "",
     };
   },
-    mounted() {
-      console.log(this.boards)
-    },
     methods: {
     createBoard() {
       if (this.newBoard !== "") {
