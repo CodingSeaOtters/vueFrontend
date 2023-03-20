@@ -102,6 +102,24 @@ const store = createStore({
                 .then(() => context.dispatch("getUserBoards", context.state.userId))
                 .catch(error => console.log(error))
         },
+        modifyNote(context, exchangeObject){
+            axios.put(connectionBase + "/board/" + exchangeObject.boardId, exchangeObject.body,{
+                headers: {
+                    'Authorization': 'Bearer ' + context.state.JWT,
+                }
+            }).then(() => {
+                context.dispatch("getUserBoards", context.state.userId)
+            })
+        },
+        deleteBoard(context, boardId){
+           axios.delete(connectionBase + "/board/" + boardId, {
+               headers: {
+                   'Authorization': 'Bearer ' + context.state.JWT,
+               }
+           })
+               .then(() => context.dispatch("getUserBoards", context.state.userId))
+               .catch(error => console.log(error))
+        },
         createNote(context, body){
             axios.post(connectionBase + "/note/" + context.state.currentBoardId, body, {
                 headers: {
@@ -110,7 +128,8 @@ const store = createStore({
             })
                 .then(response => {
                     if (response.status === 200) {
-                        context.dispatch("getAllNotes", context.state.currentBoardId);
+                        context.dispatch("getAllNotes", context.state.currentBoardId)
+                            .catch(error => console.log(error));
                     }
                 })
         }
