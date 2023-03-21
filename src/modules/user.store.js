@@ -87,11 +87,23 @@ const store = createStore({
                     }
                 }).then(response => {
                     if (response.status === 200) {
-                        context.commit("setNotesOfBoard", response.data);
+                        const notes = response.data.map(async (note) => {
+                            const isExpired = await context.dispatch("isExpired", note);
+                            return { ...note, isExpired };
+                        });
+
+                        Promise.all(notes).then((updatedNotes) => {
+                            context.commit("setNotesOfBoard", updatedNotes);
+                        });
                         resolve();
                     }
                 }).catch(error => reject(error))
             })
+        },
+        isExpired(context, note) {
+            const now = new Date;
+            const endDate = new Date(note.endDate);
+            return endDate < now;
         },
         createBoard(context, body) {
             axios.post(connectionBase + '/board/' + context.state.userId, body, {
@@ -169,6 +181,12 @@ const store = createStore({
         },
         getJWT(state) {
             return state.JWT;
+        },
+        getOnlyExpired(state){
+            return state.notesOfBoard.filter(note => note.isExpired === true)
+        },
+        getNotExpired(state){
+            return state.notesOfBoard.filter(note => note.isExpired === false)
         }
     }
 })
