@@ -49,14 +49,12 @@
                  v-model="newNote.endDate"/>
         </div>
       </div>
-
       <v-card-actions class="d-flex justify-end">
         <v-btn @click="createNote" variant="elevated" color="warning">Erstellen</v-btn>
         <v-btn @click="cancel" variant="elevated" color="secondary">Abbrechen</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
-
 </template>
 
 <script>

@@ -34,6 +34,7 @@ const store = createStore({
                             .then(() => {
                                 context.commit("changeLoggedIn");
                                 router.push("/boards")
+                                    .catch(error => console.log(error))
                             });
                     }
                 });
@@ -72,11 +73,18 @@ const store = createStore({
         changeLoggedIn(context) {
             context.commit("changeLoggedIn");
         },
+        logOut(context){
+            context.commit("changeLoggedIn");
+            context.commit("setJwt", "")
+            router.push("/")
+                .catch(error => console.log(error));
+        },
         showBoard(context, boardId) {
             context.dispatch("getAllNotes", boardId)
                 .then(() => {
                     context.commit("setCurrentBoardId", boardId)
                     router.push("/notes")
+                        .catch(error => console.log(error))
                 })
         },
         getAllNotes(context, boardId) {

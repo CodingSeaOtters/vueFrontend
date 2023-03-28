@@ -18,7 +18,6 @@
 
 <script>
 import {mapState} from "vuex";
-import router from "@/router";
 
 export default {
     name: "NavBar",
@@ -33,8 +32,8 @@ export default {
     },
     methods: {
         logout() {
-            this.store.dispatch("changeLoggedIn");
-            router.push("/");
+            this.store.dispatch("logOut");
+
 
         }
     },
